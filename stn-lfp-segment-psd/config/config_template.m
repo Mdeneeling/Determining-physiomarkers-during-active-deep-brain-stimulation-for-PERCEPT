@@ -1,0 +1,93 @@
+function cfg = config_template()
+%CONFIG_TEMPLATE Analysis settings for the segment-wise STN-LFP PSD pipeline.
+%
+%   Copy this file to config/config_local.m, rename the function inside it
+%   to `config_local`, and fill in the paths for your machine.
+%   config_local.m is git-ignored, so local paths never end up in the repo.
+
+% ---------------------------------------------------------------------
+% Paths
+% ---------------------------------------------------------------------
+cfg.paths.stream_dir    = '/path/to/BrainSenseTimeDomain';   % folder with *.mat streams
+cfg.paths.timing_file   = '/path/to/UPDRS-III_timings.xlsx'; % task timings per session
+cfg.paths.matching_file = '/path/to/session_matching.xlsx';  % stream file <-> session ID
+cfg.paths.output_dir    = fullfile(fileparts(fileparts(mfilename('fullpath'))), 'results');
+
+% ---------------------------------------------------------------------
+% Stream file selection
+% The labeling of the files was performed according to the visits in the
+% AI-DBS study (Stam MJ, de Neeling MGJ, Keulen BJ, Hubers D, de Bie RMA, 
+% Schuurman R, Buijink AWG, van Wijk BCM, Beudel M. 
+% AI-DBS study: protocol for a longitudinal prospective observational cohort 
+% study of patients with Parkinson's disease for the development of 
+% neuronal fingerprints using artificial intelligence. 
+% BMJ Open. 2025 May 16;15(5):e091563. 
+% doi: 10.1136/bmjopen-2024-091563. 
+% PMID: 40379316; PMCID: PMC12086899.)
+% ---------------------------------------------------------------------
+% Base name shared by a stream file and its entry in the matching sheet.
+cfg.files.base_name_regex = '^(Sub\d+_Visit5_json\d+)';
+% A file is used only if its name contains ALL of these ...
+cfg.files.must_contain = {'Rec1'};
+% ... and NONE of these.
+cfg.files.exclude = {'PostOK', '.5', 'Visit2', 'Visit3', 'Visit4'};
+% File names in the matching sheet refer to the 'Streaming' export;
+% replace that part so they match the BrainSenseTimeDomain files. These
+% labels were later replaced in the final ALFA toolbox with 
+% dataStreaming.Data.LFP_Ecg  
+% Please check "Keulen BJ, Stam MJ, de Neeling MGJ, Hubers D, Boonstra JT, 
+% van Wijk BCM, Swinnen BEKS, Beudel M. 
+% Amsterdam Local Field potential Analysis (ALFA) toolbox: 
+% an open source software package for deep brain stimulation research. 
+% Brain Stimul. 2026 May-Jun;19(3):103071. doi: 10.1016/j.brs.2026.103071. 
+% Epub 2026 Mar 10. PMID: 41812821."
+% for documentation
+cfg.files.matching_rename = {'Streaming', 'BrainSenseTimeDomain'};
+
+% ---------------------------------------------------------------------
+% Spreadsheet column indices
+% ---------------------------------------------------------------------
+% Timing sheet (times stored as Excel time-of-day values)
+cfg.timing_cols.session_id  = 3;   % session ID, e.g. 'sub018_5A'
+cfg.timing_cols.lfp_start   = 6;   % start of LFP recording (HH:mm:ss)
+cfg.timing_cols.rest_start  = 8;   % start of resting-state segment
+cfg.timing_cols.rest_end    = 9;   % end of resting-state segment
+cfg.timing_cols.brady_start = 18;  % start of UPDRS-III bradykinesia items
+
+% Matching sheet
+cfg.matching_cols.file_name  = 4;
+cfg.matching_cols.session_id = 7;
+
+% ---------------------------------------------------------------------
+% Spectral analysis
+% ---------------------------------------------------------------------
+cfg.spectral.fs       = 250;                % Percept BrainSense sampling rate (Hz)
+cfg.spectral.epoch_s  = 2;                  % non-overlapping epoch length (s)
+cfg.spectral.window   = 250;                % Welch window: 1 s Hamming
+cfg.spectral.overlap  = round(0.95 * 250);  % 95% window overlap within an epoch
+cfg.spectral.freqs    = 2:1:100;            % frequencies of interest (Hz)
+
+% ---------------------------------------------------------------------
+% Random control segment
+% ---------------------------------------------------------------------
+% Seed for drawing the random UPDRS-III segment, for reproducibility.
+cfg.random_seed = 42;
+
+% ---------------------------------------------------------------------
+% Session selection for the final dataset
+% ---------------------------------------------------------------------
+% Keep sessions whose ID ends with one of these condition codes.
+% json files that were from sessions before giving levodopa (DBS ON MED
+% OFF) were labeled A and json files that were from sessions after giving
+% levodopa were labeled D.
+cfg.sessions.suffixes = {'A', 'D'};
+
+% ---------------------------------------------------------------------
+% Manual timing corrections (seconds from LFP recording start)
+% ---------------------------------------------------------------------
+% Use when a timing in the spreadsheet is known to be wrong, e.g.:
+%   cfg.timing_overrides(1).session_id   = 'sub0XX_5A';
+%   cfg.timing_overrides(1).rest_start_s = 298;
+%   cfg.timing_overrides(1).rest_end_s   = 358;
+cfg.timing_overrides = struct('session_id', {}, 'rest_start_s', {}, 'rest_end_s', {});
+end

@@ -10,7 +10,4 @@ cfg.paths.fieldtrip_dir = fullfile(analysis_dir, 'fieldtrip-20240916');
 % Keep patient-derived results on the secured drive, not in the repo folder.
 cfg.paths.output_dir    = fullfile(analysis_dir, 'Entrained_gamma_project', 'results_physiomarkers');
 
-% To reproduce the original implementation for comparison:
-% cfg.stats.resample    = 'legacy_bootstrap';
-% cfg.stats.correcttail = 'no';
 end

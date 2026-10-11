@@ -1,5 +1,5 @@
 function cfg = config_local()
-%CONFIG_LOCAL Local settings for this machine (git-ignored, never committed).
+%CONFIG_LOCAL example local settings
 %
 %   Starts from the shared defaults in config_template.m and only overrides
 %   what is specific to this machine. Changes to analysis settings belong
@@ -8,9 +8,9 @@ function cfg = config_local()
 cfg = config_template();
 
 % ---------------------------------------------------------------------
-% Paths (Amsterdam UMC network drive)
+% Paths
 % ---------------------------------------------------------------------
-project_dir = 'L:\Basic\divd\knf\Onderzoek_projecten\AI_DBS';
+project_dir = '';
 analysis_dir = fullfile(project_dir, 'Analyse', 'scripts_medicatie', 'Entrained_gamma_project');
 
 cfg.paths.stream_dir    = fullfile(project_dir, 'Data_unpacked', 'BrainSenseTimeDomain');

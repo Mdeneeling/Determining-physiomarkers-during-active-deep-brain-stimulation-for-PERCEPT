@@ -4,7 +4,7 @@ MATLAB code for the descriptive k-means clustering of hemispheres by their levod
 
 This code accompanies:
 
-> **[Authors]. [Title]. *[Journal]* ([Year]). doi:[DOI]**
+de Neeling, M.G.J., Oehrn, C.R., Stam, M.J. et al. Levodopa-related physiomarkers during deep brain stimulation in Parkinson’s disease. npj Parkinsons Dis. (2026). https://doi.org/10.1038/s41531-026-01521-6
 
 It is the third stage of the analysis:
 

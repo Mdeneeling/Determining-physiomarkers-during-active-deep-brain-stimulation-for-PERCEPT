@@ -4,9 +4,9 @@ MATLAB code to identify, per hemisphere, the frequency at which levodopa changes
 
 This code accompanies:
 
-> **[Authors]. [Title]. *[Journal]* ([Year]). doi:[DOI]**
+de Neeling, M.G.J., Oehrn, C.R., Stam, M.J. et al. Levodopa-related physiomarkers during deep brain stimulation in Parkinson’s disease. npj Parkinsons Dis. (2026). https://doi.org/10.1038/s41531-026-01521-6
 
-It is the second stage of the analysis. The first stage, which computes the epoch-wise power spectra, is in [stn-lfp-segment-psd]([GitHub URL]).
+It is the second stage of the analysis. The first stage, which computes the epoch-wise power spectra, is in [stn-lfp-segment-psd].
 
 ## Method
 
@@ -52,8 +52,6 @@ The input is `psd_results.mat` from stn-lfp-segment-psd. It must contain the tab
    ```matlab
    run_physiomarker_stats
    ```
-
-With 10,000 permutations, the run takes [duration] for [N] hemispheres.
 
 ## Output
 
